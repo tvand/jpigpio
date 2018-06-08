@@ -5,9 +5,17 @@
     <artifactId>jpigpio-parent</artifactId>
     <version>0.1-SNAPSHOT</version>
   </parent>
-  <groupId>jpigpioc</groupId>
   <artifactId>jpigpioc</artifactId>
+  <version>0.1-SNAPSHOT</version>
   <packaging>so</packaging>
+
+  <dependencies>
+    <dependency>
+      <groupId>jpigpio</groupId>
+      <artifactId>jpigpio</artifactId>
+      <version>${project.version}</version>
+     </dependency>
+  </dependencies>
 
   <build>   
     <plugins>
@@ -20,8 +28,17 @@
             <source>
               <!-- relative to your project directory -->
               <directory>src/main/native</directory>
+              <fileNames>
+                <fileName>JPigpioC.c</fileName>
+              </fileNames>
             </source>          
           </sources>
+          <javahClassNames>
+             <javahClassName>jpigpio.Pigpio</javahClassName>
+          </javahClassNames>
+          <compilerStartOptions>
+            <compilerStartOption>-c -Wall -fPIC -I ${java.home}/include -I ${java.home}/include/linux</compilerStartOption>
+          </compilerStartOptions>
           <linkerStartOptions>
             <linkerStartOption>-shared -Wl -lpigpio -lpthread -lrt</linkerStartOption> 
           </linkerStartOptions>          
