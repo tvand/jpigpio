@@ -988,6 +988,61 @@ public interface JPigpio {
      */
 	public int serialDataAvailable(int handle) throws PigpioException;
 
+	/**
+     * This function opens a GPIO for bit bang reading of serial data.
+     * 
+     * The serial data is returned in a cyclic buffer and is read using gpioSerialRead.
+     * It is the caller's responsibility to read data from the cyclic buffer in a timely fashion.
+     *  
+	 * @param user_gpio 0-31
+	 * @param baud 50-250000
+	 * @param data_bits 1-32
+	 * 
+	 * @throws PigpioException if not ok
+	 * Error codes: PI_BAD_USER_GPIO, PI_BAD_WAVE_BAUD, PI_BAD_DATABITS, or PI_GPIO_IN_USE
+	 */
+    public void gpioSerialReadOpen(byte user_gpio, short baud, byte data_bits) throws PigpioException;
+    
+    /**
+     * This function configures the level logic for bit bang serial reads.
+     * 
+     * Use PI_BB_SER_INVERT to invert the serial logic and PI_BB_SER_NORMAL for normal logic. Default is PI_BB_SER_NORMAL.
+     * The GPIO must be opened for bit bang reading of serial data using gpioSerialReadOpen prior to calling this function.
+     * 
+     * @param user_gpio 0-31
+     * @param invert true or false
+     * 
+     * @throws PigpioException if not ok
+     * Error codes: PI_BAD_USER_GPIO, PI_GPIO_IN_USE, PI_NOT_SERIAL_GPIO, or PI_BAD_SER_INVERT.
+     */
+    public void gpioSerialReadInvert(byte user_gpio, boolean invert) throws PigpioException;
+    
+    /**
+     * This function copies up to bufSize bytes of data read from the bit bang serial cyclic buffer to the buffer starting at buf.
+     * 
+     * The bytes returned for each character depend upon the number of data bits data_bits specified in the gpioSerialReadOpen command.
+     * 
+     * For data_bits 1-8 there will be one byte per character.
+     * For data_bits 9-16 there will be two bytes per character.
+     * For data_bits 17-32 there will be four bytes per character.
+     *  
+     * @param user_gpio 0-31, previously opened with gpioSerialReadOpen
+     * @param buffer an array to receive the read bytes
+     * @return the number of bytes copied if OK
+     * @throws PigpioException if not ok
+     * Error codes: PI_BAD_USER_GPIO or PI_NOT_SERIAL_GPIO.
+     */
+    public int gpioSerialRead(byte user_gpio, byte[] buffer) throws PigpioException;
+    
+    /**
+     * This function closes a GPIO for bit bang reading of serial data.
+     * 
+     * @param user_gpio 0-31, previously opened with gpioSerialReadOpen
+     * @return
+     * @throws PigpioException if not ok
+     * Error codes: PI_BAD_USER_GPIO, or PI_NOT_SERIAL_GPIO.
+     */
+    public void gpioSerialReadClose(byte user_gpio) throws PigpioException;
 
 
 	// ################ PWM

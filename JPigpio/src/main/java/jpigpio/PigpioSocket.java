@@ -1,13 +1,13 @@
 package jpigpio;
 
+import static jpigpio.Utils.LEint2Long;
+
 import java.io.IOException;
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 import java.util.ArrayList;
 
 import jpigpio.impl.CommonPigpio;
-
-import static jpigpio.Utils.LEint2Long;
 
 /**
  * An implementation of the Pigpio Java interface using sockets to connect to the target pigpio demon
@@ -1118,6 +1118,34 @@ public class PigpioSocket extends CommonPigpio {
 		return rc;
 	}
 
+    @Override
+    public void gpioSerialReadOpen(byte user_gpio, short baud, byte data_bits) throws PigpioException
+    {
+        // TODO Auto-generated method stub
+        throw new NotImplementedException();
+    }
+    
+    @Override
+    public void gpioSerialReadInvert(byte user_gpio, boolean invert) throws PigpioException
+    {
+        // TODO Auto-generated method stub
+        throw new NotImplementedException();
+    }
+    
+    @Override
+    public int gpioSerialRead(byte user_gpio, byte[] buffer) throws PigpioException
+    {
+        // TODO Auto-generated method stub
+        throw new NotImplementedException();
+    }
+    
+    @Override
+    public void gpioSerialReadClose(byte user_gpio) throws PigpioException
+    {
+        // TODO Auto-generated method stub
+        throw new NotImplementedException();
+    }
+	
 	// ########################
 
 	/**

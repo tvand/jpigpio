@@ -1,8 +1,8 @@
 package jpigpio;
 
-import jpigpio.impl.CommonPigpio;
-
 import java.util.ArrayList;
+
+import jpigpio.impl.CommonPigpio;
 
 /**
  * Pigpiod wrapper class using native C++ methods. This class can be used only when executing your application directly at Raspberry Pi device.
@@ -329,6 +329,18 @@ public class Pigpio extends CommonPigpio {
 		throw new NotImplementedException();
 	}
 
+    @Override
+    public native void gpioSerialReadOpen(byte user_gpio, short baud, byte data_bits) throws PigpioException;
+    
+    @Override
+    public native void gpioSerialReadInvert(byte user_gpio, boolean invert) throws PigpioException;
+    
+    @Override
+    public native int gpioSerialRead(byte user_gpio, byte[] buffer) throws PigpioException;
+    
+    @Override
+    public native void gpioSerialReadClose(byte user_gpio) throws PigpioException;
+    
 	// ###############
 
 
@@ -378,6 +390,5 @@ public class Pigpio extends CommonPigpio {
 	public void removeCallback(GPIOListener cgpioListener) throws PigpioException{
 		throw new NotImplementedException();
 	}
-
 } // End of class
 // End of file
