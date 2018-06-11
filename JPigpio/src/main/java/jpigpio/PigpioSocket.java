@@ -82,9 +82,9 @@ public class PigpioSocket extends CommonPigpio {
 	// private final int CMD_PROCD = 39;	//39 script_id 0 0 -
 	// private final int CMD_PROCR = 40;	//40 script_id 0 4*X uint32_t pars[X]
 	// private final int CMD_PROCS = 41;	//41 script_id 0 0 -
-	// private final int CMD_SLRO = 42;		//42 gpio baud 4 uint32_t databits
-	// private final int CMD_SLR = 43;		//43 gpio count 0 -
-	// private final int CMD_SLRC = 44;		//44 gpio 0 0 -
+	private final int CMD_SLRO = 42;		//42 gpio baud 4 uint32_t databits
+	private final int CMD_SLR = 43;		    //43 gpio count 0 -
+	private final int CMD_SLRC = 44;		//44 gpio 0 0 -
 	// private final int CMD_PROCP = 45;	//45 script_id 0 0 -
 	// private final int CMD_MICS = 46;		//46 micros 0 0 -
 
@@ -140,7 +140,7 @@ public class PigpioSocket extends CommonPigpio {
 	// CMD_BI2CZ	91	sda	0	X	uint8_t data[X]
 	// CMD_I2CZ	92	handle	0	X	uint8_t data[X]
 	// CMD_WVCHA	93	0	0	X	uint8_t data[X]
-	// CMD_SLRI	94	gpio	invert	0	-
+	private final int CMD_SLRI = 94;	    // 94 gpio	invert	0	-
 	// CMD_CGI	95	0	0	0	-
 	// CMD_CSI	96	config	0	0	-
 	// CMD_FG	97	gpio	steady	0	-
@@ -205,7 +205,6 @@ public class PigpioSocket extends CommonPigpio {
 			} catch (IOException e) {
 				throw new PigpioException("NotificationRouter", e);
 			}
-
 		}
 
         /**
@@ -222,9 +221,7 @@ public class PigpioSocket extends CommonPigpio {
 				} catch (IOException e) {
 					throw new PigpioException("NotificationRouter.terminate", e);
 				}
-
 			}
-
 		}
 
         /**
@@ -266,8 +263,6 @@ public class PigpioSocket extends CommonPigpio {
 						throw new PigpioException("NotificationRouter.removeListener", e);
 					}
 				}
-
-
 			}
 		}
 
@@ -338,7 +333,6 @@ public class PigpioSocket extends CommonPigpio {
             } catch (InterruptedException e) {
                 // TODO: handle exception somehow :-)
 			}
-
 		}
 
 		public void start(){
@@ -348,7 +342,6 @@ public class PigpioSocket extends CommonPigpio {
 				thread.start ();
 			}
 		}
-
 	}
 
 
@@ -388,7 +381,6 @@ public class PigpioSocket extends CommonPigpio {
 		} catch (IOException|PigpioException e) {
 			throw new PigpioException("gpioReconnect", e);
 		}
-
 	}
 
 
@@ -518,7 +510,6 @@ public class PigpioSocket extends CommonPigpio {
 		} catch (IOException e) {
 			throw new PigpioException("notifyClose", e);
 		}
-
 	}
 
 	@Override
@@ -578,7 +569,6 @@ public class PigpioSocket extends CommonPigpio {
 		} catch (IOException e) {
 			throw new PigpioException("waveAddGeneric", e);
 		}
-
 	}
 
 	@Override
@@ -614,9 +604,7 @@ public class PigpioSocket extends CommonPigpio {
 		} catch (IOException e) {
 			throw new PigpioException("waveAddSerial", e);
 		}
-
 	}
-
 
 	@Override
 	public void waveAddNew() throws PigpioException {
@@ -629,7 +617,6 @@ public class PigpioSocket extends CommonPigpio {
 			throw new PigpioException("waveAddNew", e);
 		}
 	} // waveAddNew
-
 
 	@Override
 	public boolean waveTxBusy() throws PigpioException {
@@ -833,7 +820,6 @@ public class PigpioSocket extends CommonPigpio {
 		} catch (IOException e) {
 			throw new PigpioException("gpioTrigger");
 		}
-
 	}
 
 	// ############### SPI
@@ -928,7 +914,6 @@ public class PigpioSocket extends CommonPigpio {
 		} catch (IOException e) {
 			throw new PigpioException("setPWMDutycycle failed",e);
 		}
-
 	}
 
 	@Override
@@ -944,7 +929,6 @@ public class PigpioSocket extends CommonPigpio {
 		}
 
 		return rc;
-
 	}
 
 	@Override
@@ -954,7 +938,6 @@ public class PigpioSocket extends CommonPigpio {
 		} catch (IOException e) {
 			throw new PigpioException("setPWMRange failed",e);
 		}
-
 	}
 
 	@Override
@@ -1019,7 +1002,6 @@ public class PigpioSocket extends CommonPigpio {
 		return rc;
 	}
 
-
 	// ################ SERIAL
 	@Override
 	public int serialOpen(String tty, int baudRate, int flags) throws PigpioException {
@@ -1035,7 +1017,6 @@ public class PigpioSocket extends CommonPigpio {
 		}
 
 		return rc;
-
 	}
 
 	@Override
@@ -1119,31 +1100,74 @@ public class PigpioSocket extends CommonPigpio {
 	}
 
     @Override
-    public void gpioSerialReadOpen(byte user_gpio, short baud, byte data_bits) throws PigpioException
+    public void gpioSerialReadOpen(byte user_gpio, int baud, byte data_bits) throws PigpioException
     {
-        // TODO Auto-generated method stub
-        throw new NotImplementedException();
+        int rc = 0;
+
+        try {
+            ByteBuffer bb = ByteBuffer.allocate(4);
+            bb.order(ByteOrder.LITTLE_ENDIAN);
+            bb.putInt(data_bits);
+            
+            rc = slCmd.sendCmd(CMD_SLRO, user_gpio, baud, 4, bb.array());
+            if (rc < 0)
+                throw new PigpioException(rc);
+
+        } catch (IOException e) {
+            throw new PigpioException("gpioSerialReadOpen failed", e);
+        }
     }
     
     @Override
     public void gpioSerialReadInvert(byte user_gpio, boolean invert) throws PigpioException
     {
-        // TODO Auto-generated method stub
-        throw new NotImplementedException();
+        int rc = 0;
+
+        try {
+            rc = slCmd.sendCmd(CMD_SLRI, user_gpio, invert ? 1 : 0);
+            if (rc < 0)
+                throw new PigpioException(rc);
+
+        } catch (IOException e) {
+            throw new PigpioException("gpioSerialReadInvert failed", e);
+        }
     }
     
     @Override
-    public int gpioSerialRead(byte user_gpio, byte[] buffer) throws PigpioException
+    public byte[] gpioSerialRead(byte user_gpio, int count) throws PigpioException
     {
-        // TODO Auto-generated method stub
-        throw new NotImplementedException();
+        byte[] data = new byte[1];
+        int rc = 0;
+
+        try {
+            rc = slCmd.sendCmd(CMD_SLR, user_gpio, count);
+            if (rc < 0)
+                throw new PigpioException(rc);
+            if (rc > 0) {
+                data = new byte[rc];
+                slCmd.readBytes(data);
+            }
+
+        } catch (IOException e) {
+            throw new PigpioException("gpioSerialRead failed", e);
+        }
+
+        return data;
     }
     
     @Override
     public void gpioSerialReadClose(byte user_gpio) throws PigpioException
     {
-        // TODO Auto-generated method stub
-        throw new NotImplementedException();
+        int rc = 0;
+
+        try {
+            rc = slCmd.sendCmd(CMD_SLRC, user_gpio, 0);
+            if (rc < 0)
+                throw new PigpioException(rc);
+
+        } catch (IOException e) {
+            throw new PigpioException("gpioSerialReadClose failed", e);
+        }
     }
 	
 	// ########################
