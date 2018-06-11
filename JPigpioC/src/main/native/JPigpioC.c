@@ -140,6 +140,69 @@ void JNICALL Java_jpigpio_Pigpio_gpioServo(JNIEnv *env, jobject obj, jint gpio, 
 
 /*
  * Class:     jpigpio_Pigpio
+ * Method:    gpioSerialReadOpen
+ * Signature: (BIB)V
+ */
+void JNICALL Java_jpigpio_Pigpio_gpioSerialReadOpen(JNIEnv *env, jobject obj, jbyte user_gpio, jint baud, jbyte data_bits) {
+	int rc = gpioSerialReadOpen((unsigned)user_gpio, baud, (unsigned)data_bits);
+	if (rc < 0) {
+		(*env)->Throw(env, createPigpioException(env, rc));
+		return;
+	}
+}
+
+/*
+ * Class:     jpigpio_Pigpio
+ * Method:    gpioSerialReadInvert
+ * Signature: (BZ)V
+ */
+void JNICALL Java_jpigpio_Pigpio_gpioSerialReadInvert(JNIEnv *, jobject, jbyte, jboolean) {
+	int rc = gpioSerialReadInvert((unsigned)user_gpio, (unsigned)invert);
+	if (rc < 0) {
+		(*env)->Throw(env, createPigpioException(env, rc));
+		return;
+	}
+}
+
+/*
+ * Class:     jpigpio_Pigpio
+ * Method:    gpioSerialRead
+ * Signature: (BI)[B
+ */
+jbyteArray JNICALL Java_jpigpio_Pigpio_gpioSerialRead(JNIEnv *env, jobject obj, jbyte user_gpio, jint count) {
+	jbyteArray byteArray = NULL;
+	jbyte *buf = malloc(count);
+
+	int rc = gpioSerialRead((unsigned)user_gpio, buf, count);
+
+	if (rc >= 0) {
+		byteArray = (*env)->NewByteArray(env, rc);
+		(*env)->SetByteArrayRegion(env, byteArray, 0, rc, buf);
+		free(buf);
+	} else {
+		byteArray = (*env)->NewByteArray(env, 1);
+		free(buf);
+		(*env)->Throw(env, createPigpioException(env, rc));
+	}
+
+	return byteArray;
+}
+
+/*
+ * Class:     jpigpio_Pigpio
+ * Method:    gpioSerialReadClose
+ * Signature: (B)V
+ */
+void JNICALL Java_jpigpio_Pigpio_gpioSerialReadClose(JNIEnv *env, jobject obj, jbyte user_gpio) {
+	int rc = gpioSerialReadClose((unsigned)user_gpio);
+	if (rc < 0) {
+		(*env)->Throw(env, createPigpioException(env, rc));
+		return;
+	}
+}
+
+/*
+ * Class:     jpigpio_Pigpio
  * Method:    gpioTrigger
  * Signature: (IJZ)V
  */
