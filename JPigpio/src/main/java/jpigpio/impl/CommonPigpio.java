@@ -1,5 +1,7 @@
 package jpigpio.impl;
 
+import java.util.concurrent.TimeUnit;
+
 import jpigpio.GPIO;
 import jpigpio.JPigpio;
 import jpigpio.PigpioException;
@@ -70,23 +72,24 @@ public abstract class CommonPigpio implements JPigpio {
 		} // End of each bit
 	} // End of gpioShiftOut
 
+    @Override
+    public void gpioDelay(long delay, TimeUnit unit) throws PigpioException {
+        gpioDelay(unit.toMicros(delay));
+    }
+	
 	@Override
 	public void gpioDelay(long delay, int type) throws PigpioException {
 		switch (type) {
 		case JPigpio.PI_MICROSECONDS:
-			gpioDelay(delay);
+			gpioDelay(delay, TimeUnit.MICROSECONDS);
 			break;
 		case JPigpio.PI_SECONDS:
-			delay = delay * 1000;
+            gpioDelay(delay, TimeUnit.SECONDS);
+		    break;
 		case JPigpio.PI_MILLISECONDS:
-			try {
-				Thread.sleep(delay);
-			} catch (Exception e) {
-				e.printStackTrace();
-			}
+            gpioDelay(delay, TimeUnit.MILLISECONDS);
 			break;
 		} // End of switch
-
 	} // End of gpioDelay
 
 } // End of class
