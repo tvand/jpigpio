@@ -5,14 +5,18 @@ public class Utils {
 	 * Add a handler to perform a clean termination of pigpio on termination.
 	 * @param pigpio pigpio object to terminate
 	 */
-	public static void addShutdown(JPigpio pigpio) {
-		Runtime.getRuntime().addShutdownHook(new Thread(() -> {
-			try {
-				pigpio.gpioTerminate();
-			} catch (Exception e) {
-				e.printStackTrace();
+	public static void addShutdown(final JPigpio pigpio) {
+		Runtime.getRuntime().addShutdownHook(new Thread() {
+			
+			@Override
+			public void run() {
+				try {
+					pigpio.gpioTerminate();
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
 			}
-		}));
+		});
 	} // End of assShutdown
 	
 	public static int mapToInt(int value, int sourceLow, int sourceHigh, int targetLow, int targetHigh) {

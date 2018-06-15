@@ -1,6 +1,7 @@
 package jpigpio;
 
 import java.util.ArrayList;
+import java.util.concurrent.TimeUnit;
 
 /**
  * The exposed pigpio functions as Java methods.
@@ -165,8 +166,11 @@ public interface JPigpio {
 	 */
 	public void gpioDelay(long delay) throws PigpioException;
 	
+	@Deprecated // Use gpioDelay(long delay, TimeUnit unit)
 	public void gpioDelay(long delay, int type) throws PigpioException;
 
+    public void gpioDelay(long delay, TimeUnit unit) throws PigpioException;
+	
 	// ############## NOTIFICATIONS
 
 	/**
@@ -1001,7 +1005,7 @@ public interface JPigpio {
 	 * @throws PigpioException if not ok
 	 * Error codes: PI_BAD_USER_GPIO, PI_BAD_WAVE_BAUD, PI_BAD_DATABITS, or PI_GPIO_IN_USE
 	 */
-    public void gpioSerialReadOpen(byte user_gpio, short baud, byte data_bits) throws PigpioException;
+    public void gpioSerialReadOpen(byte user_gpio, int baud, byte data_bits) throws PigpioException;
     
     /**
      * This function configures the level logic for bit bang serial reads.
@@ -1027,12 +1031,12 @@ public interface JPigpio {
      * For data_bits 17-32 there will be four bytes per character.
      *  
      * @param user_gpio 0-31, previously opened with gpioSerialReadOpen
-     * @param buffer an array to receive the read bytes
-     * @return the number of bytes copied if OK
+     * @param count maximum number of bytes to return
+     * @return an array of bytes copied if OK
      * @throws PigpioException if not ok
      * Error codes: PI_BAD_USER_GPIO or PI_NOT_SERIAL_GPIO.
      */
-    public int gpioSerialRead(byte user_gpio, byte[] buffer) throws PigpioException;
+    public byte[] gpioSerialRead(byte user_gpio, int count) throws PigpioException;
     
     /**
      * This function closes a GPIO for bit bang reading of serial data.

@@ -330,13 +330,13 @@ public class Pigpio extends CommonPigpio {
 	}
 
     @Override
-    public native void gpioSerialReadOpen(byte user_gpio, short baud, byte data_bits) throws PigpioException;
+    public native void gpioSerialReadOpen(byte user_gpio, int baud, byte data_bits) throws PigpioException;
     
     @Override
     public native void gpioSerialReadInvert(byte user_gpio, boolean invert) throws PigpioException;
     
     @Override
-    public native int gpioSerialRead(byte user_gpio, byte[] buffer) throws PigpioException;
+    public native byte[] gpioSerialRead(byte user_gpio, int count) throws PigpioException;
     
     @Override
     public native void gpioSerialReadClose(byte user_gpio) throws PigpioException;
