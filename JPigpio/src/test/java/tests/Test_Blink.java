@@ -17,7 +17,7 @@ public class Test_Blink {
 	/**
 	 * This is the gpio pin to set output and pulse on and off.
 	 */
-	private final int BLINK_PIN = 17;
+	private final int BLINK_PIN = 21;
 	
 	
 	/**
