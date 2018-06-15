@@ -2,9 +2,9 @@
   <modelVersion>4.0.0</modelVersion>
   <parent>
     <groupId>jpigpio</groupId>
-    <artifactId>jpigpio-parent</artifactId>
+    <artifactId>JPigpio-parent</artifactId>
     <version>0.1-SNAPSHOT</version>
   </parent>
-  <artifactId>jpigpio</artifactId>
+  <artifactId>JPigpio</artifactId>
   
 </project>

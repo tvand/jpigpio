@@ -2,20 +2,23 @@
   <modelVersion>4.0.0</modelVersion>
   <parent>
     <groupId>jpigpio</groupId>
-    <artifactId>jpigpio-parent</artifactId>
+    <artifactId>JPigpio-parent</artifactId>
     <version>0.1-SNAPSHOT</version>
   </parent>
-  <artifactId>jpigpioc</artifactId>
-  <version>0.1-SNAPSHOT</version>
+  <artifactId>JPigpioC</artifactId>
   <packaging>so</packaging>
 
   <dependencies>
     <dependency>
       <groupId>jpigpio</groupId>
-      <artifactId>jpigpio</artifactId>
+      <artifactId>JPigpio</artifactId>
       <version>${project.version}</version>
      </dependency>
   </dependencies>
+  
+  <properties>
+    <jdk.include>${java.home}/../include</jdk.include>
+  </properties>
 
   <build>   
     <plugins>
@@ -37,10 +40,11 @@
              <javahClassName>jpigpio.Pigpio</javahClassName>
           </javahClassNames>
           <compilerStartOptions>
-            <compilerStartOption>-c -Wall -fPIC -I ${java.home}/include -I ${java.home}/include/linux</compilerStartOption>
+            <compilerStartOption>-c -Wall -fPIC -I${jdk.include} -I${jdk.include}/linux </compilerStartOption>
           </compilerStartOptions>
+          <linkerFinalName>libJPigpioC</linkerFinalName>
           <linkerStartOptions>
-            <linkerStartOption>-shared -Wl -lpigpio -lpthread -lrt</linkerStartOption> 
+            <linkerStartOption>-shared -lpigpio -lpthread -lrt</linkerStartOption> 
           </linkerStartOptions>          
         </configuration>
       </plugin>
